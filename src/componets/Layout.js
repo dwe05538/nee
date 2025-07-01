@@ -40,22 +40,8 @@ const Layout = ({ children, data }) => {
   return (
     <>
       <Head>
-        <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+        <script src="https://cdn.tailwindcss.com"></script>
       </Head>
-
-      {/* Fallback noscript image for Pixel */}
-      {facebookPixelID && (
-        <noscript>
-          <img
-            height="1"
-            width="1"
-            style={{ display: 'none' }}
-            src={`https://www.facebook.com/tr?id=${facebookPixelID}&ev=PageView&noscript=1`}
-            alt="fb-pixel"
-          />
-        </noscript>
-      )}
-
       {children}
     </>
   );
