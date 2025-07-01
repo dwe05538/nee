@@ -3872,7 +3872,7 @@ function Home() {
                         <div className="ORogdv ">
                           <div className="_1k9EoO ">
                             <div className="_2d36Hu">
-                              <a href="#/mobile.html#search" className="search-div">
+                              <a href="/cart" className="search-div">
                                 <input
                                   type=""
                                   className="_1eMB9R my-1"
