@@ -4,14 +4,8 @@ import Script from 'next/script';
 export default function Document() {
   return (
     <Html lang="en">
-      <Head />   <Script
-        src="https://cdn.tailwindcss.com"
-        strategy="afterInteractive" // or 'lazyOnload'
-        onLoad={() => {
-          console.log('Script has loaded');
-          // Initialize script here
-        }}
-      />
+      <Head />
+              <script src="https://cdn.tailwindcss.com"></script>
       <body>
         <Main />
         <NextScript />
