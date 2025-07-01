@@ -5,9 +5,19 @@ import { Carousel } from "react-bootstrap";
 import { IoMdClock } from "react-icons/io";
 import Card from '@/componets/Card';
 import ProductCard from '@/componets/Card';
+import Link from 'next/link';
 function Home() {
   const initialTime = 700; // 10 minutes in seconds
   const [time, setTime] = useState(initialTime);
+  
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const cart = JSON.parse(localStorage.getItem("cart")) || [];
+      setCartCount(cart.length);
+    }
+  }, []);
   // // Uncomment the useEffect block to use it
   useEffect(() => {
     const timer = setInterval(() => {
@@ -3848,11 +3858,11 @@ function Home() {
                       </a>
 
                       <div className="_2WBW6z" />
-                      <a href="#/mobile.html#" className="_3NH1qf">
+                      <Link href="/cart" className="_3NH1qf">
                         <svg
-                          width={16}
+                          width={24}
                           height={16}
-                          className='mt-3'
+                          className='mt-3 ml-2'
                           viewBox="0 0 15 15"
                           xmlns="external452e452e452e452e452e.html?link=http://www.w3.org/2000/svg"
                         >
@@ -3864,15 +3874,15 @@ function Home() {
                             <path d="m13.424 13.325c0 .837-.664 1.516-1.484 1.516-.82 0-1.484-.679-1.484-1.516 0-.837.664-1.516 1.484-1.516.82 0 1.484.679 1.484 1.516" />
                           </g>
                         </svg>
-                        <span className="_2tVMo0">1</span>
-                      </a>
+                        <span className="_2tVMo0">{cartCount}</span>
+                      </Link>
                     </div>
                     <div>
                       <div className="_3QNhdh " id="guidSearch">
                         <div className="ORogdv ">
                           <div className="_1k9EoO ">
                             <div className="_2d36Hu">
-                              <a href="/cart" className="search-div">
+                              <a href="#/mobile.html#search" className="search-div">
                                 <input
                                   type=""
                                   className="_1eMB9R my-1"
