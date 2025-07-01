@@ -380,7 +380,7 @@ const CartPage = () => {
       <div style={styles.buttonContainer}>
         <button 
           style={{...styles.continueButton}}
-          onClick={() => navigate('/')}
+          onClick={() => router.push('/')}
         >
           Continue Shopping
         </button>
