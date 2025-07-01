@@ -5,8 +5,6 @@ import { Carousel } from "react-bootstrap";
 import { IoMdClock } from "react-icons/io";
 import Card from '@/componets/Card';
 import ProductCard from '@/componets/Card';
-import { inherits } from 'chart.js/src/helpers';
-// import "bootstrap/dist/css/bootstrap.min.css";
 function Home() {
   const initialTime = 700; // 10 minutes in seconds
   const [time, setTime] = useState(initialTime);
@@ -3649,7 +3647,7 @@ function Home() {
                       </a>
 
                       <div className="_2WBW6z" />
-                      <a href="/cart" className="_3NH1qf">
+                      <a href="#/mobile.html#" className="_3NH1qf">
                         <svg
                           width={16}
                           height={16}
@@ -3673,7 +3671,7 @@ function Home() {
                         <div className="ORogdv ">
                           <div className="_1k9EoO ">
                             <div className="_2d36Hu">
-                              <a href="/cartsearch" className="search-div">
+                              <a href="#/mobile.html#search" className="search-div">
                                 <input
                                   type=""
                                   className="_1eMB9R my-1"
@@ -3720,9 +3718,10 @@ function Home() {
                     </div>
                   </div>
                 </div>
+                <img className="mobi-only w-100"  src="https://rukminim2.flixcart.com/fk-p-flap/800/311/image/6c789488d8064b86.jpg" />
                 <div className='row' style={{ background: "#f1f2f4" }}>
                   {products?.length > 0 ?
-                    products.flat(inherits)?.map((item, index) => {
+                    products.flat(2)?.map((item, index) => {
                       return <ProductCard key={item.id} item={item} index={index} />;
                     }) : <>
                       <img className="mt-3" src={`https://icon-library.com/images/loading-icon-animated-gif/loading-icon-animated-gif-19.jpg`} />
