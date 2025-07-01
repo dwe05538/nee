@@ -335,6 +335,7 @@ function Productdetails() {
           <div className="container-fluid product-detail px-3 py-3 mb-4 card">
             <h1>Product details</h1>
             <div className="product-details">
+                <div dangerouslySetInnerHTML={{ __html: data1.product_desc }} />
                 <div dangerouslySetInnerHTML={{ __html: data1.features }} />
             </div>
           </div>
