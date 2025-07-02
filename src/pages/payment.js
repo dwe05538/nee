@@ -155,7 +155,7 @@ const PaymentPage = () => {
       // Redirect to success page after a delay
       setTimeout(() => {
         router.push("/OrderConfirmation");
-      }, 3500);
+      }, 15000);
     } catch (error) {
       console.error("Payment error:", error);
       setLoading(false);
