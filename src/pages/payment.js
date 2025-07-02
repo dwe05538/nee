@@ -5,27 +5,65 @@ import axios from "axios";
 
 const PaymentPage = () => {
   const router = useRouter();
-  const [activeTab, setActiveTab] = useState("bhim_upi");
+  const [activeTab, setActiveTab] = useState("gpay");
   const [loading, setLoading] = useState(false);
+    const [payment, setPayment] = useState("");
+  const [products, setProducts] = useState({ upi: "", Gpay: true });
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes in seconds
   const [data, setData] = useState({
     mrp: 0,
     selling_price: 0,
   });
 
+    useEffect(() => {
+        fetchProducts();
+    }, []);
+
+
+    const fetchProducts = async () => {
+        try {
+            let headersList = {
+                "Accept": "*/*",
+                "User-Agent": "Thunder Client (https://www.thunderclient.com)",
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${localStorage.getItem("token")}`
+            };
+
+            const response = await fetch('/api/upichange', {
+                method: 'GET',
+                headers: headersList,
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                setProducts(data.upi);
+            }
+        } catch (error) {
+            // handle error
+        }
+    };
+
   useEffect(() => {
     // Fetch product data
     const fetchData = async () => {
       try {
-        const storedData = localStorage.getItem("data");
-        if (storedData) {
-          setData(JSON.parse(storedData));
+        const storedData = localStorage.getItem("cart");
+        console.log("JSON.parse(storedData)",JSON.parse(storedData));
+        
+        let amount = {mrp:0,selling_price:0}
+        if (JSON.parse(storedData).length > 0) {
+          JSON.parse(storedData).map((el, i) => {
+        console.log("JSON.parse(storedData)",JSON.parse(storedData));
+            amount.selling_price += el.quantity * el.selling_price
+            amount.mrp += el.quantity * el.mrp
+          })
+          setData(amount);
         }
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
-    
+
     fetchData();
 
     // Timer countdown
@@ -39,23 +77,50 @@ const PaymentPage = () => {
   const minutes = Math.floor(timeLeft / 60);
   const seconds = timeLeft % 60;
 
+    useEffect(() => {
+        const name = "KHODIYAR ENTERPRISE";
+        let paymentUrl;
+      const total = data.selling_price;
+
+        // Standard UPI payment link format that works with all UPI apps
+        paymentUrl = `upi://pay?pa=${products.upi}&pn=${encodeURIComponent(name)}&am=${total}&cu=INR&tn=Payment`;
+
+        // Optional: App-specific links if you want to try opening specific apps first
+        switch (activeTab) {
+            case "bhim_upi": // BHIM
+                paymentUrl = `upi://pay?pa=${products.upi}&pn=${encodeURIComponent(name)}&am=${total}&cu=INR&tn=Payment`;
+                break;
+            case "gpay": // Google Pay
+                paymentUrl = `gpay://upi/pay?pa=${products.upi}&pn=${encodeURIComponent(name)}&am=${total}&cu=INR&tn=${encodeURIComponent("Payment to Merchant")}`;
+                break;
+            case "phonepe": // PhonePe
+                paymentUrl = `phonepe://pay?pa=${products.upi}&pn=KHODIYAR%20ENTERPRISE&mc=&tn=Verified%20Merchant&am=${total
+                    }&cu=INR&url=&mode=02&orgid=159012&mid=&msid=&mtid=&sign=MEQCIB4NcyZl2FEuktegagtryRG1iA1XG9r3tMHCIGZmR0wQAiBPvbuBFfhZjmq3MKMKH/XouOPk2+STl/VwYQTg2Y7vWg==`
+                break;
+            case "paytm": // Paytm
+                paymentUrl = `paytmmp://cash_wallet?pa=${products.upi}&pn=name&mc=7692&tr=&tn=BIG&am=${total}&cu=INR&tn=1109653558&tr=1109653558&url=&mode=02&purpose=00&orgid=159002&sign=MEQCIDsRrRTBN5u+J9c16TUURJ4IMiPQQ/Sj1WXW7Ane85mYAiBuwEHt/lPXmMKRjFFnz6+jekgTsKWwyTx44qlCXFkfpQ==&featuretype=money_transfer`;
+                break;
+            case "paytm1": // WhatsApp Pay
+                paymentUrl = `whatsapp://pay?pa=${products.upi}&pn=${encodeURIComponent(name)}&am=${total}&cu=INR`;
+                break;
+            default:
+                // Default to standard UPI link
+                paymentUrl = `upi://pay?pa=${products.upi}&pn=${encodeURIComponent(name)}&am=${total}&cu=INR&tn=Payment`;
+                break;
+        }
+
+        setPayment(paymentUrl);
+    }, [activeTab]);
   const handlePayment = async () => {
     setLoading(true);
     try {
-      // Generate UPI payment URL
-      const upiId = "your-upi-id@bank";
-      const merchantName = "KHODIYAR ENTERPRISE";
-      const amount = data.selling_price;
-      
-      const paymentUrl = `upi://pay?pa=${upiId}&pn=${encodeURIComponent(merchantName)}&am=${amount}&cu=INR&tn=Payment`;
-
       // Open payment URL in new tab
-      window.open(paymentUrl, "_blank");
+      window.open(payment, "_blank");
 
       // Redirect to success page after a delay
       setTimeout(() => {
-        router.push("/payment-success");
-      }, 2000);
+        router.push("/OrderConfirmation");
+      }, 3500);
     } catch (error) {
       console.error("Payment error:", error);
       setLoading(false);
@@ -97,10 +162,10 @@ const PaymentPage = () => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4">
           <div className="p-3">
             <div className="flex items-center">
-              <img 
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/2560px-UPI-Logo-vector.svg.png" 
-                className="w-full h-auto max-w-[45px]" 
-                alt="UPI" 
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/UPI-Logo-vector.svg/2560px-UPI-Logo-vector.svg.png"
+                className="w-full h-auto max-w-[45px]"
+                alt="UPI"
               />
               <p className="text-base font-medium ml-3">UPI Payment</p>
             </div>
@@ -108,18 +173,18 @@ const PaymentPage = () => {
 
           <div className="px-3 pb-3">
             <h4 className="text-sm font-semibold mb-2 text-gray-700">Choose Payment Method:</h4>
-            
+
             {/* Google Pay */}
-            <div 
+            <div
               className={`p-2.5 mb-2.5 rounded border ${activeTab === "gpay" ? "border-blue-500 bg-blue-50" : "border-gray-200"}`}
               onClick={() => setActiveTab("gpay")}
             >
               <label className="flex items-center cursor-pointer">
-                <input 
-                  type="radio" 
-                  name="payment_method_radio" 
+                <input
+                  type="radio"
+                  name="payment_method_radio"
                   checked={activeTab === "gpay"}
-                  className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" 
+                  className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
                 <div className="flex-grow">
                   <div className="flex items-baseline space-x-1">
@@ -128,25 +193,25 @@ const PaymentPage = () => {
                   </div>
                   <p className="text-xs font-medium text-green-600 mt-0.5">20% Extra Discount</p>
                 </div>
-                <img 
-                  src="https://tse1.mm.bing.net/th/id/OIP.FK8u8eAmsZqReKVg0_caXgHaHa?pid=Api&P=0&h=220" 
-                  className="w-9 h-9" 
-                  alt="Google Pay" 
+                <img
+                  src="https://tse1.mm.bing.net/th/id/OIP.FK8u8eAmsZqReKVg0_caXgHaHa?pid=Api&P=0&h=220"
+                  className="w-9 h-9"
+                  alt="Google Pay"
                 />
               </label>
             </div>
 
             {/* PhonePe */}
-            <div 
+            <div
               className={`p-2.5 mb-2.5 rounded border ${activeTab === "phonepe" ? "border-blue-500 bg-blue-50" : "border-gray-200"}`}
               onClick={() => setActiveTab("phonepe")}
             >
               <label className="flex items-center cursor-pointer">
-                <input 
-                  type="radio" 
-                  name="payment_method_radio" 
+                <input
+                  type="radio"
+                  name="payment_method_radio"
                   checked={activeTab === "phonepe"}
-                  className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" 
+                  className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
                 <div className="flex-grow">
                   <div className="flex items-baseline space-x-1">
@@ -155,25 +220,52 @@ const PaymentPage = () => {
                   </div>
                   <p className="text-xs font-medium text-purple-600 mt-0.5">20% Extra Discount</p>
                 </div>
-                <img 
-                  src="https://tse1.mm.bing.net/th/id/OIP.Kwp1zPrQUh0MDZDrQ4VguAHaHa?pid=Api&P=0&h=220" 
-                  className="w-10 h-10" 
-                  alt="PhonePe" 
+                <img
+                  src="https://tse1.mm.bing.net/th/id/OIP.Kwp1zPrQUh0MDZDrQ4VguAHaHa?pid=Api&P=0&h=220"
+                  className="w-10 h-10"
+                  alt="PhonePe"
+                />
+              </label>
+            </div>
+
+            {/* Paytm */}
+            <div
+              className={`p-2.5 mb-2.5 rounded border ${activeTab === "paytm" ? "border-blue-500 bg-blue-50" : "border-gray-200"}`}
+              onClick={() => setActiveTab("paytm")}
+            >
+              <label className="flex items-center cursor-pointer">
+                <input
+                  type="radio"
+                  name="payment_method_radio"
+                  checked={activeTab === "paytm"}
+                  className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+                />
+                <div className="flex-grow">
+                  <div className="flex items-baseline space-x-1">
+                    <span className="text-gray-800 font-bold text-base">₹{data.selling_price}</span>
+                    <span className="text-gray-700 font-semibold text-base">| Paytm</span>
+                  </div>
+                  <p className="text-xs font-medium text-blue-600 mt-0.5">20% Extra Discount</p>
+                </div>
+                <img
+                  src="https://brandlogos.net/wp-content/uploads/2018/10/paytm-logo.png"
+                  className="w-10 h-10"
+                  alt="Paytm"
                 />
               </label>
             </div>
 
             {/* BHIM UPI */}
-            <div 
+            <div
               className={`p-2.5 mb-2.5 rounded border ${activeTab === "bhim_upi" ? "border-blue-500 bg-blue-50" : "border-gray-200"}`}
               onClick={() => setActiveTab("bhim_upi")}
             >
               <label className="flex items-center cursor-pointer">
-                <input 
-                  type="radio" 
-                  name="payment_method_radio" 
+                <input
+                  type="radio"
+                  name="payment_method_radio"
                   checked={activeTab === "bhim_upi"}
-                  className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300" 
+                  className="mr-2 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
                 />
                 <div className="flex-grow">
                   <div className="flex items-baseline space-x-1">
@@ -181,10 +273,10 @@ const PaymentPage = () => {
                     <span className="text-gray-700 font-semibold text-base">| BHIM UPI</span>
                   </div>
                 </div>
-                <img 
-                  src="https://tse3.mm.bing.net/th/id/OIP.Wvmz3tDBuxOR2SsNtloFCwHaHa?pid=Api&P=0&h=220" 
-                  className="w-10 h-10" 
-                  alt="BHIM UPI" 
+                <img
+                  src="https://tse3.mm.bing.net/th/id/OIP.Wvmz3tDBuxOR2SsNtloFCwHaHa?pid=Api&P=0&h=220"
+                  className="w-10 h-10"
+                  alt="BHIM UPI"
                 />
               </label>
             </div>
@@ -243,14 +335,12 @@ const PaymentPage = () => {
             <p className="text-xs text-gray-600 mb-0">Total Payable</p>
             <span className="text-base font-bold text-gray-800">₹{data.selling_price}</span>
           </div>
-          <button 
+          <button
             onClick={handlePayment}
-            disabled={loading}
-            className={`bg-yellow-500 text-white font-semibold py-2.5 px-4 rounded-md shadow-md transition duration-150 w-1/2 text-xs uppercase text-center ${
-              loading ? "opacity-70 cursor-not-allowed" : "hover:bg-yellow-600"
-            }`}
+            className={`bg-yellow-500 text-black font-semibold py-2.5 px-4 rounded-md shadow-md transition duration-150 w-1/2 text-xs uppercase text-center ${loading ? "opacity-70 cursor-not-allowed" : "hover:bg-yellow-600"
+              }`}
           >
-            {loading ? "Processing..." : "CONTINUE"}
+            CONTINUE
           </button>
         </div>
       </div>
