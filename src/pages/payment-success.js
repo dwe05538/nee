@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import Head from 'next/head';
 import { Loader2, CheckCircle2, XCircle } from 'lucide-react';
-import { FbPixelEvents, initFacebookPixel } from '@/lib/facebookPixel';
+import { FbPixelEvents, initFacebookPixel } from '@/componets/lib/facebookPixel';
 
 const PaymentSuccess = () => {
   const router = useRouter();

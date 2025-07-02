@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { ToastProvider } from 'react-toast-notifications'; 
-import { initFacebookPixel } from '../lib/facebookPixel';
+import { initFacebookPixel } from '../componets/lib/facebookPixel';
 import '../styles/Home.module.css'
 import '../styles/globals.css'
 import "bootstrap/dist/css/bootstrap.min.css"; // Import bootstrap CSS
