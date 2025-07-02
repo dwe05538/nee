@@ -6,6 +6,7 @@ import Layout from '@/componets/Layout';
 import Link from 'next/link';
 import { FaShare } from "react-icons/fa";
 import { AiFillLike } from "react-icons/ai";
+import { trackAddToCart, trackViewContent } from '../lib/pixelEvents';
 
 function Productdetails() {
   const initialTime = 900; // 10 minutes in seconds
@@ -46,6 +47,7 @@ function Productdetails() {
   const fetchProducts = async () => {
     try {
       setdata1(JSON?.parse(localStorage?.getItem("d1")))
+                      trackViewContent(JSON?.parse(localStorage?.getItem("d1")));
     } catch (error) {
     }
   };
@@ -96,6 +98,7 @@ function Productdetails() {
 
     // Check if item already exists in cart
     const existingItemIndex = currentCart.findIndex(item => item.Title === newItem.Title);
+        trackAddToCart(newItem);
     
     let updatedCart;
     if (existingItemIndex >= 0) {

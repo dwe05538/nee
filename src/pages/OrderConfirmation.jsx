@@ -3,6 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { trackPurchase } from './lib/pixelEvents';
 
 export default function OrderConfirmation() {
   const router = useRouter();
@@ -13,6 +14,20 @@ export default function OrderConfirmation() {
     amount: '',
     deliveryDate: ''
   });
+ useEffect(() => {
+    const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const total = cart.reduce((sum, item) => sum + parseFloat(item.selling_price) * item.quantity, 0);
+
+    // Replace this with your real order ID logic if needed
+    const orderId = `ORD-${Date.now()}`;
+
+    if (cart.length > 0) {
+      trackPurchase(orderId, cart, total);
+
+      // Clear cart after purchase
+      localStorage.removeItem('cart');
+    }
+  }, []);
 
   useEffect(() => {
     // Only run on client side

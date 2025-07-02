@@ -6,6 +6,7 @@ import { IoMdClock } from "react-icons/io";
 import Card from '@/componets/Card';
 import ProductCard from '@/componets/Card';
 import Link from 'next/link';
+import { fbq } from './lib/pixelEvents';
 function Home() {
   const initialTime = 700; // 10 minutes in seconds
   const [time, setTime] = useState(initialTime);
@@ -3770,6 +3771,8 @@ function Home() {
 
   useEffect(() => {
     fetchProducts1();
+        fbq('trackCustom', 'HomeView');
+
   }, []);
   const fetchProducts1 = async () => {
     try {

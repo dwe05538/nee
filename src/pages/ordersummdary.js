@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { trackInitiateCheckout } from "./lib/pixelEvents";
 
 const OrderSummary = () => {
     const router = useRouter();
@@ -214,7 +215,9 @@ const OrderSummary = () => {
                                 </div>
                                 <button
                                     className="proceed-to-payment-btn"
-                                    onClick={() => router.push('/payment')}
+                                    onClick={() => {
+                                            trackInitiateCheckout(cartItems);
+router.push('/payment')}}
                                 >
                                     Proceed to Payment
                                 </button>

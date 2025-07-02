@@ -6,6 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import { useToasts } from 'react-toast-notifications';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import { trackViewContent } from '../lib/pixelEvents';
 
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
@@ -24,6 +25,7 @@ const ProductForm = () => {
                 method: "GET",
             }).then((re) => {
                 setdata1(JSON?.parse(localStorage?.getItem("d1")))
+
             })
         } catch (error) {
         }
