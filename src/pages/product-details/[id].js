@@ -95,7 +95,7 @@ function Productdetails() {
     };
 
     // Check if item already exists in cart
-    const existingItemIndex = currentCart.findIndex(item => item.id === newItem.id);
+    const existingItemIndex = currentCart.findIndex(item => item.Title === newItem.Title);
     
     let updatedCart;
     if (existingItemIndex >= 0) {
