@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { trackInitiateCheckout } from "./lib/pixelEvents";
+import { trackInitiateCheckout } from "../utils/pixelEvents";
 
 const OrderSummary = () => {
     const router = useRouter();

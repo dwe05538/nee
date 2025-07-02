@@ -6,7 +6,7 @@ import Layout from '@/componets/Layout';
 import Link from 'next/link';
 import { FaShare } from "react-icons/fa";
 import { AiFillLike } from "react-icons/ai";
-import { trackAddToCart, trackViewContent } from '../lib/pixelEvents';
+import { trackAddToCart, trackViewContent } from '../../utils/pixelEvents';
 
 function Productdetails() {
   const initialTime = 900; // 10 minutes in seconds

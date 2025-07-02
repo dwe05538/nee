@@ -6,7 +6,7 @@ import 'react-quill/dist/quill.snow.css';
 import { useToasts } from 'react-toast-notifications';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
-import { trackViewContent } from '../lib/pixelEvents';
+import { trackViewContent } from '../../utils/pixelEvents';
 
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });

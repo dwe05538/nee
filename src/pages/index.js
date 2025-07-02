@@ -6,7 +6,7 @@ import { IoMdClock } from "react-icons/io";
 import Card from '@/componets/Card';
 import ProductCard from '@/componets/Card';
 import Link from 'next/link';
-import { fbq } from './lib/pixelEvents';
+import { fbq } from '../utils/pixelEvents';
 function Home() {
   const initialTime = 700; // 10 minutes in seconds
   const [time, setTime] = useState(initialTime);

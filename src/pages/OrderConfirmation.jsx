@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { trackPurchase } from './lib/pixelEvents';
+import { trackPurchase } from '../utils/pixelEvents';
 
 export default function OrderConfirmation() {
   const router = useRouter();
