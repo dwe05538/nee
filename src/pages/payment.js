@@ -380,14 +380,11 @@ const PaymentPage = () => {
           </div>
           <button
             onClick={handlePayment}
-            disabled={!activeTab || loading}
-            className={`font-semibold py-2.5 px-4 rounded-md shadow-md transition duration-150 w-1/2 text-xs uppercase text-center ${
-              !activeTab || loading
-                ? "bg-gray-400 text-gray-700 cursor-not-allowed"
-                : "bg-yellow-500 text-black hover:bg-yellow-600"
+            className={`font-semibold py-3 px-4.5 rounded-md shadow-md transition duration-150 w-1/2 text-xs uppercase text-center ${
+            "bg-yellow-500 text-black hover:bg-yellow-600"
             }`}
           >
-            {loading ? "PROCESSING..." : "CONTINUE"}
+            { "CONTINUE"}
           </button>
         </div>
       </div>
