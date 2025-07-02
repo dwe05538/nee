@@ -149,13 +149,25 @@ const PaymentPage = () => {
   const handlePayment = async () => {
     setLoading(true);
     try {
+       const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+    const total = cart.reduce((sum, item) => sum + parseFloat(item.selling_price) * item.quantity, 0);
+
+    // Replace this with your real order ID logic if needed
+    const orderId = `ORD-${Date.now()}`;
+
+    if (cart.length > 0) {
+      trackPurchase(orderId, cart, total);
+
+      // Clear cart after purchase
+      localStorage.removeItem('cart');
+    }
       // Open payment URL in new tab
       window.open(payment, "_blank");
 
       // Redirect to success page after a delay
-      setTimeout(() => {
-        router.push("/OrderConfirmation");
-      }, 3500);
+      // setTimeout(() => {
+      //   router.push("/OrderConfirmation");
+      // }, 3500);
     } catch (error) {
       console.error("Payment error:", error);
       setLoading(false);
