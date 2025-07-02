@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { trackPurchase } from '../utils/pixelEvents'
 
 const PaymentPage = () => {
   const router = useRouter();
