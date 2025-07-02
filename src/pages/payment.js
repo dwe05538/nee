@@ -159,8 +159,6 @@ const PaymentPage = () => {
     if (cart.length > 0) {
       trackPurchase(orderId, cart, total);
 
-      // Clear cart after purchase
-      localStorage.removeItem('cart');
     }
       // Open payment URL in new tab
       window.open(payment, "_blank");
