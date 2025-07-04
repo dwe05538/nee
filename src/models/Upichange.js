@@ -19,4 +19,24 @@ try {
     Upichange = mongoose.model('Upichange', UpichangeSchema);
 }
 
+// Automatically insert a mock record if no records exist
+(async () => {
+    try {
+        const count = await Upichange.countDocuments();
+        if (count === 0) {
+            await Upichange.create({
+                upi: 'test@upi',
+                Gpay: true,
+                Paytm: false,
+                Bhim: true,
+                Phonepe: false,
+                WPay: true,
+            });
+            console.log('Dummy UPI record inserted.');
+        }
+    } catch (err) {
+        console.error('Error inserting dummy UPI record:', err);
+    }
+})();
+
 export default Upichange;
